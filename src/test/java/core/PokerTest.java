@@ -13,9 +13,9 @@ public class PokerTest extends TestCase{
 	public void testNumberOfCardsWhenRemoveOneCard(){
 		Poker p = new Poker();
 		p.initPoker();
-		p.removePoker();
+		p.removePoker(2);
 		assertEquals(51,p.getPoker().size());
-		p.removePoker();
+		p.removePoker(6);
 		assertEquals(50,p.getPoker().size());
 	}
 	
