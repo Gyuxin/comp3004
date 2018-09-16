@@ -21,11 +21,21 @@ public List<Card> getPoker(){
  return this.deckPoker;
 }
 
+public Card getOneCard(){
+    Card temp = deckPoker.get(0);
+    removePoker(0);
+    return temp;
+  }
+
 public void initPoker(){
  for(int i = 0; i < 52; i++ ){
      Card temp = new Card(faceValue[i]);
      this.deckPoker.add(temp);
    }
+ shufflePoker();
+}
+
+public void shufflePoker(){
  Collections.shuffle(deckPoker);
 }
 
