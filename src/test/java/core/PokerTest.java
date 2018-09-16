@@ -19,4 +19,16 @@ public class PokerTest extends TestCase{
 		assertEquals(50,p.getPoker().size());
 	}
 	
+	public void testShufflingProcedure(){
+		Poker p = new Poker();
+		p.initPoker();
+		p.shufflePoker();
+		Card temp1 = p.getPoker().get(0);
+		p.shufflePoker();
+		p.shufflePoker();
+		p.shufflePoker();
+		Card temp2 = p.getPoker().get(0);
+		assertNotSame(temp1,temp2);
+	}
+	
 }
