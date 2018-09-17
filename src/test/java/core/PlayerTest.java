@@ -31,30 +31,37 @@ public class PlayerTest extends TestCase {
 		assertEquals(15, p.getScore());	
 	}
 	
-	public void testScoreIncludingAce(){
-		Player p = new Player();
-		p.addPlayerCard(card5);
-		p.addPlayerCard(card4);
-		assertEquals(12, p.getScore());
-		
+	public void aceCountAs11(){
 		Player p2 = new Player();
 		p2.addPlayerCard(card1);
 		p2.addPlayerCard(card5);
-		p2.addPlayerCard(card2);
 		assertEquals(21, p2.getScore());
+	}
 		
+	public void aceCountAs1(){
 		Player p3 = new Player();
 		p3.addPlayerCard(card1);
 		p3.addPlayerCard(card6);
 		p3.addPlayerCard(card4);
-		assertEquals(14, p3.getScore());
-		
+		assertEquals(14, p3.getScore());		
+	}
+
+
+	public void aceCount11Then1(){
+		Player p = new Player();
+		p.addPlayerCard(card5);
+		assertEquals(11, p.getScore());
+		p.addPlayerCard(card4);
+		assertEquals(12, p.getScore());
+	}
+	
+	public void testTwoAceWorthOneForBoth(){
 		Player p4 = new Player();
 		p4.addPlayerCard(card7);
 		p4.addPlayerCard(card8);
 		p4.addPlayerCard(card4);
-		p4.addPlayerCard(card9);
-		assertEquals(25, p4.getScore());
+		p4.addPlayerCard(card5);
+		assertEquals(19, p4.getScore());
 		
 	}
 }
