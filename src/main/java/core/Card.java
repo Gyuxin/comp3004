@@ -11,7 +11,7 @@ public Card(String s){
 public int getScore(){
 
  String word = score.substring(1);
- if(word.equals('A')){
+ if(word.equals("A")){
    return 11;
  } else if (word.equals("J") || word.equals("Q") || word.equals("K")){
    return 10;
@@ -20,5 +20,9 @@ public int getScore(){
    return num;
  }
 }
+
+public String toString(){
+    return this.score;
+  }
 
 }
