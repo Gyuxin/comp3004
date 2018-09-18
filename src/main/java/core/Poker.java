@@ -27,6 +27,19 @@ public Card getOneCard(){
     return temp;
   }
 
+public boolean cardInTheDeck(Card c){
+	int count = 0;
+	while(count<deckPoker.size()-1){
+		if(c.toString().equals(deckPoker.get(count))){
+			return true;
+		} else {
+			count++;
+		}
+	}
+	return false;
+}
+
+
 public void initPoker(){
  for(int i = 0; i < 52; i++ ){
      Card temp = new Card(faceValue[i]);

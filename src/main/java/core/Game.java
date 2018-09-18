@@ -9,30 +9,32 @@ public class Game {
   Player p = new Player();
   Computer c = new Computer();
   Scanner sc = new Scanner(System.in);
-  File file=new File("./src/main/resources/playerBurst.txt");
+  File file=new File("./src/main/resources/test7.txt");
   private boolean consoleInput = false;
   
   /*Start a new game*/
   public void play(boolean consoleInput) throws FileNotFoundException {
-
-	 this.consoleInput = consoleInput; 
-	  
-     initGames();
- 
-     computeScore();
-
-   }
+	     System.out.println("----------- A new game begin ----------");
+		 this.consoleInput = consoleInput; 
+		 try{
+		     initGames();
+		     computeScore();
+		 } catch(IllegalArgumentException ex){
+			 System.out.println(ex.getMessage());
+		 }
+		    }
+	
 
   /*
    * Player's turn 
    * Ask Player hit or stand recursively
    * */
   public void playerTurn(Player p){
+	  	System.out.println("\n----------- It's your turn ----------");
 	     while(true){
 	         if(p.getScore()>21) { //burst
 	        	 break;
 	         } else {
-	        	 System.out.println("\nIt's your turn ... ");
 	             System.out.println("\nHit(H) or Stand(S)?");
 	             char input = sc.next().charAt(0);
 	             System.out.println(input+"\n");
@@ -40,10 +42,19 @@ public class Game {
 	            	 if(consoleInput){
 	            		 p.addPlayerCard(pk.getOneCard());
 	            	 } else {
-	            		 p.addPlayerCard(new Card(sc.next()));
+	            		 if(sc.hasNext()){
+		            		 Card temp = new Card(sc.next());
+		            		 if(!pk.cardInTheDeck(temp)){
+		            			 p.addPlayerCard(temp);
+		            		 } else {
+		            			 throw new IllegalArgumentException("ERROR: No such card on the deck " + temp.toString());
+		            		 }
+	            		 }
 	            	 }
-	             } else {
+	             } else if (input == 'S' || input == 's') {
 	            	 break;
+	             } else {
+	            	 throw new IllegalArgumentException("ERROR: Invalid input " + input);
 	             }
 	         }
 	     }
@@ -55,7 +66,7 @@ public class Game {
    * Dealer (Computer) determine hit or stand
    * */
  public void dealerTurn(Computer c){
-     System.out.println("\nIt's dealer's turn ... ");
+     System.out.println("\n------------It's dealer's turn---------- ");
      System.out.println(c.toString()+"\n");
      while(true){
     	 if(c.getScore()>21) { 
@@ -66,7 +77,16 @@ public class Game {
             	 if(consoleInput){
             		 c.addComputerCard(pk.getOneCard());
             	 } else {
-            		 c.addComputerCard(new Card(sc.next()));
+            		 if(sc.hasNext()){
+	            		 Card temp = new Card(sc.next());		//automatically add a new card to hand card
+	            		 if(!pk.cardInTheDeck(temp)){
+	            			 c.addComputerCard(temp);
+	            		  } else {
+	            		    	 throw new IllegalArgumentException("ERROR: Duplicate Card!" + temp.toString());
+	            		  }
+	            	  } else {
+	            			 throw new IllegalArgumentException("ERROR: No Next Card Available!" );
+	            		 }
             	 }
     		 } else {
     			 break;
@@ -88,15 +108,14 @@ public class Game {
 	  Card c2 = pk.getOneCard();
 	  Card c3 = pk.getOneCard();
 	  Card c4 = pk.getOneCard();
-	  
-	  if(!consoleInput){		
-		  sc = new Scanner(file); 
+	  if(!consoleInput){	
+		  sc = new Scanner(file);
 		  c1 = new Card(sc.next());
 		  c2 = new Card(sc.next());
 		  c3 = new Card(sc.next());
 		  c4 = new Card(sc.next());
 	  }
-
+	  if(!pk.cardInTheDeck(c1) && !pk.cardInTheDeck(c2) && !pk.cardInTheDeck(c3) && !pk.cardInTheDeck(c4)){
 	     p.addPlayerCard(c1);
 	     p.addPlayerCard(c2);
 
@@ -115,8 +134,11 @@ public class Game {
 			  else {
 			     playerTurn(p);
 			     dealerTurn(c);
-		  }
+			  }
 	    }
+	  } else {
+		  throw new IllegalArgumentException("ERROR: Deck has no such card!" );
+	  }
  }
   
   //Determine blackjack for dealer and user
@@ -131,11 +153,15 @@ public class Game {
   // Determine can player split the card or not.
   public boolean playerCanSplit(Card c1, Card c2){
 	  if(c1.toString().substring(1).equals(c2.toString().substring(1))){
-			  System.out.println("\nSPLIT(D)?\n");
+			  System.out.println("\nSPLIT(D) or Not(N)?\n");
 			  char input = sc.next().charAt(0);
 			  System.out.println(input+"\n");
 			  if(input == 'd' || input == 'D'){
 				  return true;
+			  } else if(input == 'n' || input == 'N' ) {
+				  return false;
+			  } else {
+				  throw new IllegalArgumentException("ERROR: Invalid input " + input);
 			  }
 	  }
 	  return false;
@@ -158,17 +184,27 @@ public class Game {
 			
 		  Player p1 = new Player();
 		  p1.addPlayerCard(c1);
-		  if(!this.consoleInput){
-			  p1.addPlayerCard(new Card(sc.next()));
+		  if(!this.consoleInput){	  
+			  Card temp = new Card(sc.next());		//automatically add a new card to hand card
+			  if(!pk.cardInTheDeck(temp)){
+				  p1.addPlayerCard(temp);
+     		  } else {
+     		    	 throw new IllegalArgumentException("ERROR: Duplicate Card " + temp.toString());
+     		  }
 		  } else {
-			  p1.addPlayerCard(pk.getOneCard());
+			  p1.addPlayerCard(pk.getOneCard());	
 		  }
 		  playerTurn(p1);
 		
 		  Player p2 = new Player();
 		  p2.addPlayerCard(c2);
 		  if(!this.consoleInput){
-			  p2.addPlayerCard(new Card(sc.next()));
+			  Card temp = new Card(sc.next());		//automatically add a new card to hand card
+			  if(!pk.cardInTheDeck(temp)){
+				  p2.addPlayerCard(temp);
+     		  } else {
+     		    	 throw new IllegalArgumentException("ERROR: No such card on the deck " + temp.toString());
+     		  }
 		  } else {
 			  p2.addPlayerCard(pk.getOneCard());
 		  }
@@ -206,14 +242,12 @@ public class Game {
    public void computeScore(){
 	   
      if((c.getScore() >= p.getScore() && c.getScore() <=21) || p.getScore() > 21 ){
-       System.out.println("\nComputer Win!\n");
+       System.out.println("\n=========== Computer Win! ===========\n");
      } else {
-     System.out.println("\nYou Win!\n");
+     System.out.println("\n========== You Win! =========\n");
    }
-     System.out.println(c.toString());
-     System.out.println(c.scoreToString());
-     System.out.println(p.toString());
-     System.out.println(p.scoreToString());
+     System.out.println(c.toString()+"\n"+c.scoreToString());
+     System.out.println(p.toString()+"\n"+p.scoreToString());
      
      
    }
