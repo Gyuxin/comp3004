@@ -6,11 +6,22 @@ import java.io.*;
 public class Game {
 
   Poker pk = new Poker();
-  Player p = new Player();
-  Computer c = new Computer();
+  public Player p = new Player();
+  public Computer c = new Computer();
   Scanner sc = new Scanner(System.in);
-  File file=new File("./src/main/resources/test7.txt");
+  private File file;
   private boolean consoleInput = false;
+  
+  
+  public Game() {
+	  this.file = new File("./src/test/resources/test3.txt");
+  }
+  
+  
+  public Game(File file) {
+	  this.file = file;
+  }
+  
   
   /*Start a new game*/
   public void play(boolean consoleInput) throws FileNotFoundException {
@@ -36,19 +47,20 @@ public class Game {
 	        	 break;
 	         } else {
 	             System.out.println("\nHit(H) or Stand(S)?");
-	             char input = sc.next().charAt(0);
+	             char input;
+	             if(sc.hasNext()) {
+	            	 input = sc.next().charAt(0);
+	             } else {
+	            	 throw new IllegalArgumentException("ERROR: no next card available ");
+	             }
 	             System.out.println(input+"\n");
 	             if (input == 'H' || input == 'h'){
 	            	 if(consoleInput){
 	            		 p.addPlayerCard(pk.getOneCard());
 	            	 } else {
 	            		 if(sc.hasNext()){
-		            		 Card temp = new Card(sc.next());
-		            		 if(!pk.cardInTheDeck(temp)){
-		            			 p.addPlayerCard(temp);
-		            		 } else {
-		            			 throw new IllegalArgumentException("ERROR: No such card on the deck " + temp.toString());
-		            		 }
+		            		 Card temp = pk.getOneCardFromFileInput(sc.next());
+		            		 p.addPlayerCard(temp);
 	            		 }
 	            	 }
 	             } else if (input == 'S' || input == 's') {
@@ -78,12 +90,8 @@ public class Game {
             		 c.addComputerCard(pk.getOneCard());
             	 } else {
             		 if(sc.hasNext()){
-	            		 Card temp = new Card(sc.next());		//automatically add a new card to hand card
-	            		 if(!pk.cardInTheDeck(temp)){
-	            			 c.addComputerCard(temp);
-	            		  } else {
-	            		    	 throw new IllegalArgumentException("ERROR: Duplicate Card!" + temp.toString());
-	            		  }
+	            		 Card temp = pk.getOneCardFromFileInput(sc.next());		//automatically add a new card to hand card
+	            		 c.addComputerCard(temp);
 	            	  } else {
 	            			 throw new IllegalArgumentException("ERROR: No Next Card Available!" );
 	            		 }
@@ -104,18 +112,20 @@ public class Game {
   public void initGames() throws FileNotFoundException {
 	  
 	  pk.initPoker();
-	  Card c1 = pk.getOneCard(); //initialize four cards
-	  Card c2 = pk.getOneCard();
-	  Card c3 = pk.getOneCard();
-	  Card c4 = pk.getOneCard();
+	  Card c1,c2,c3,c4;
 	  if(!consoleInput){	
 		  sc = new Scanner(file);
-		  c1 = new Card(sc.next());
-		  c2 = new Card(sc.next());
-		  c3 = new Card(sc.next());
-		  c4 = new Card(sc.next());
+		  c1 = pk.getOneCardFromFileInput(sc.next());
+		  c2 = pk.getOneCardFromFileInput(sc.next());
+		  c3 = pk.getOneCardFromFileInput(sc.next());
+		  c4 = pk.getOneCardFromFileInput(sc.next());  
+	  } else {
+		  c1 = pk.getOneCard(); //initialize four cards
+		  c2 = pk.getOneCard();
+		  c3 = pk.getOneCard();
+		  c4 = pk.getOneCard();
 	  }
-	  if(!pk.cardInTheDeck(c1) && !pk.cardInTheDeck(c2) && !pk.cardInTheDeck(c3) && !pk.cardInTheDeck(c4)){
+
 	     p.addPlayerCard(c1);
 	     p.addPlayerCard(c2);
 
@@ -136,10 +146,7 @@ public class Game {
 			     dealerTurn(c);
 			  }
 	    }
-	  } else {
-		  throw new IllegalArgumentException("ERROR: Deck has no such card!" );
-	  }
- }
+	  } 
   
   //Determine blackjack for dealer and user
   public boolean blackJack(int i){
@@ -185,12 +192,8 @@ public class Game {
 		  Player p1 = new Player();
 		  p1.addPlayerCard(c1);
 		  if(!this.consoleInput){	  
-			  Card temp = new Card(sc.next());		//automatically add a new card to hand card
-			  if(!pk.cardInTheDeck(temp)){
+			  Card temp = pk.getOneCardFromFileInput(sc.next());		//automatically add a new card to hand card
 				  p1.addPlayerCard(temp);
-     		  } else {
-     		    	 throw new IllegalArgumentException("ERROR: Duplicate Card " + temp.toString());
-     		  }
 		  } else {
 			  p1.addPlayerCard(pk.getOneCard());	
 		  }
@@ -199,12 +202,8 @@ public class Game {
 		  Player p2 = new Player();
 		  p2.addPlayerCard(c2);
 		  if(!this.consoleInput){
-			  Card temp = new Card(sc.next());		//automatically add a new card to hand card
-			  if(!pk.cardInTheDeck(temp)){
+			  Card temp = pk.getOneCardFromFileInput(sc.next());		//automatically add a new card to hand card
 				  p2.addPlayerCard(temp);
-     		  } else {
-     		    	 throw new IllegalArgumentException("ERROR: No such card on the deck " + temp.toString());
-     		  }
 		  } else {
 			  p2.addPlayerCard(pk.getOneCard());
 		  }
