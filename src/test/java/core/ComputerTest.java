@@ -10,6 +10,7 @@ public class ComputerTest extends TestCase {
 	Card card5 = new Card("HA");
 	Card card6 = new Card("H3");
 	Card card7 = new Card("H6");
+	Card card8 = new Card("D2");
 	
 	public void testNumOfCardInTheList(){
 		Computer c = new Computer();
@@ -62,6 +63,16 @@ public class ComputerTest extends TestCase {
 		c.addComputerCard(card7);
 		assertTrue(c.hitOrNot());
 	}
+	
+	public void testDealerCanHitRepeatly(){
+		Computer c = new Computer();
+		c.addComputerCard(card5);
+		c.addComputerCard(card6);
+		assertTrue(c.hitOrNot());
+		c.addComputerCard(card8);
+		assertTrue(c.hitOrNot());
+		c.addComputerCard(card3);
+	}	
 	
 	public void testDealerShouldStand(){
 		Computer c = new Computer();
