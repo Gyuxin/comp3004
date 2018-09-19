@@ -14,7 +14,7 @@ public class Game {
   
   
   public Game() {
-	  this.file = new File("./src/test/resources/test3.txt");
+	  this.file = new File("./src/test/resources/playerBurst.txt");
   }
   
   
